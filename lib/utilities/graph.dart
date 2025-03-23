@@ -14,10 +14,4 @@ class Graph {
   List<int> getNeighbors(int node) {
     return adjacencyList[node] ?? [];
   }
-
-  void printGraph() {
-    adjacencyList.forEach((key, value) {
-      print("$key -> $value");
-    });
-  }
 }

@@ -12,7 +12,7 @@ class ParkingLayout extends StatefulWidget {
 
 class _ParkingLayoutState extends State<ParkingLayout> {
   late Graph parkingGraph;
-  List<int> path = []; // Store the shortest path
+  List<int> path = [];
 
   @override
   void initState() {
@@ -21,72 +21,63 @@ class _ParkingLayoutState extends State<ParkingLayout> {
     _initializeGraph();
   }
 
-void _initializeGraph() {
-  // Step 1: Add Nodes (Parking + Roads)
-  for (int i = 1; i <= 30; i++) {
-    parkingGraph.addNode(i);
+  void _initializeGraph() {
+    for (int i = 1; i <= 44; i++) {
+      parkingGraph.addNode(i);
+    }
+
+    parkingGraph.addEdge(19, 27);
+    parkingGraph.addEdge(20, 1);
+    parkingGraph.addEdge(20, 7);
+    parkingGraph.addEdge(20, 19);
+    parkingGraph.addEdge(21, 2);
+    parkingGraph.addEdge(21, 8);
+    parkingGraph.addEdge(21, 20);
+    parkingGraph.addEdge(22, 3);
+    parkingGraph.addEdge(22, 21);
+    parkingGraph.addEdge(23, 4);
+    parkingGraph.addEdge(23, 22);
+    parkingGraph.addEdge(23, 29);
+    parkingGraph.addEdge(24, 5);
+    parkingGraph.addEdge(24, 9);
+    parkingGraph.addEdge(24, 23);
+    parkingGraph.addEdge(25, 6);
+    parkingGraph.addEdge(25, 10);
+    parkingGraph.addEdge(25, 24);
+    parkingGraph.addEdge(26, 25);
+    parkingGraph.addEdge(27, 31);
+    parkingGraph.addEdge(28, 22);
+    parkingGraph.addEdge(29, 33);
+    parkingGraph.addEdge(30, 26);
+    parkingGraph.addEdge(30, 15);
+    parkingGraph.addEdge(30, 16);
+    parkingGraph.addEdge(31, 35);
+    parkingGraph.addEdge(32, 28);
+    parkingGraph.addEdge(33, 39);
+    parkingGraph.addEdge(34, 30);
+    parkingGraph.addEdge(34, 17);
+    parkingGraph.addEdge(34, 18);
+    parkingGraph.addEdge(35, 36);
+    parkingGraph.addEdge(36, 11);
+    parkingGraph.addEdge(36, 37);
+    parkingGraph.addEdge(37, 12);
+    parkingGraph.addEdge(37, 38);
+    parkingGraph.addEdge(38, 32);
+    parkingGraph.addEdge(38, 39);
+    parkingGraph.addEdge(39, 40);
+    parkingGraph.addEdge(39, 44);
+    parkingGraph.addEdge(40, 13);
+    parkingGraph.addEdge(40, 41);
+    parkingGraph.addEdge(41, 14);
+    parkingGraph.addEdge(41, 42);
+    parkingGraph.addEdge(42, 34);
+    parkingGraph.addEdge(43, 38);
   }
-
-  // Step 2: Add Edges (Road & Parking Connectivity)
-
-  // Top Parking Spaces to Top Road (One-Way Down)
-  parkingGraph.addEdge(1, 7);
-  parkingGraph.addEdge(2, 8);
-  parkingGraph.addEdge(3, 9);
-  parkingGraph.addEdge(4, 10);
-  parkingGraph.addEdge(5, 11);
-  parkingGraph.addEdge(6, 12);
-
-  // Top Road (One-way Left)
-  parkingGraph.addEdge(7, 8);
-  parkingGraph.addEdge(8, 9);
-  parkingGraph.addEdge(9, 10);
-  parkingGraph.addEdge(10, 11);
-  parkingGraph.addEdge(11, 12);
-
-  // Vertical Connections from Top Road to Middle Road
-  parkingGraph.addEdge(7, 13);
-  parkingGraph.addEdge(9, 14);
-  parkingGraph.addEdge(11, 15);
-
-  parkingGraph.addEdge(13, 16);
-  parkingGraph.addEdge(14, 18);
-  parkingGraph.addEdge(15, 20);
-
-  // Middle Parking to Middle Road
-  parkingGraph.addEdge(16, 17);
-  parkingGraph.addEdge(18, 19);
-  parkingGraph.addEdge(20, 21);
-
-  // Middle Road (One-way Left)
-  parkingGraph.addEdge(17, 18);
-  parkingGraph.addEdge(19, 20);
-  parkingGraph.addEdge(21, 22);
-
-  // Vertical Connections from Middle to Bottom Road
-  parkingGraph.addEdge(16, 23);
-  parkingGraph.addEdge(18, 24);
-  parkingGraph.addEdge(20, 25);
-
-  parkingGraph.addEdge(23, 26);
-  parkingGraph.addEdge(24, 27);
-  parkingGraph.addEdge(25, 28);
-
-  // Bottom Road (One-way Right)
-  parkingGraph.addEdge(26, 27);
-  parkingGraph.addEdge(27, 28);
-  parkingGraph.addEdge(28, 29);
-  parkingGraph.addEdge(29, 30);
-
-  // Entrance & Exit Connections
-  parkingGraph.addEdge(30, 26); // Entrance to Bottom Road
-  parkingGraph.addEdge(25, 1);  // Exit to Top
-}
 
   void _findPath() {
     setState(() {
-      path = findShortestPath(parkingGraph, 30, 7); // Example: Entrance (30) to Parking (7)
-      print("Shortest Path: $path"); // Debugging
+      path = findShortestPath(parkingGraph, 32, 4);
+      print("Shortest Path: $path");
     });
   }
 
@@ -98,7 +89,7 @@ void _initializeGraph() {
         actions: [
           IconButton(
             icon: Icon(Icons.directions),
-            onPressed: _findPath, // Run pathfinding when clicked
+            onPressed: _findPath,
           ),
         ],),
       body: Center(
@@ -133,7 +124,8 @@ void _initializeGraph() {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          RoadWidget(numUnits: 8, direction: "left", highlightPath: path.any((node) => node >= 7 && node <= 12)),
+                          for (int i = 19; i < 27; i++)
+                            RoadWidget(numUnits: 1, direction: "left", highlightPath: path.contains(i)),
                         ],
                       ),
 
@@ -143,8 +135,8 @@ void _initializeGraph() {
                         children: [
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(13)),
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(16)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(27)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(31)),
                             ],
                           ),
                           Column(
@@ -155,14 +147,14 @@ void _initializeGraph() {
                           ),
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(9)),
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(14)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(28)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(32)),
                             ],
                           ),
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(15)),
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(18)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(29)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(33)),
                             ],
                           ),
                           Column(
@@ -173,8 +165,8 @@ void _initializeGraph() {
                           ),
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(17)),
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(21)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(30)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(34)),
                             ],
                           ),
                           Column(
@@ -189,7 +181,8 @@ void _initializeGraph() {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          RoadWidget(numUnits: 8, direction: "right", highlightPath: path.any((node) => node >= 25 && node <= 30)),
+                          for (int i = 35; i < 43; i++)
+                            RoadWidget(numUnits: 1, direction: "right", highlightPath: path.contains(i)),
                         ],
                       ),
 
@@ -198,8 +191,8 @@ void _initializeGraph() {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           SpaceFillWidget(numUnits: 3),
-                          RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(30)), // Entrance
-                          RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(26)), // Exit
+                          RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(43)), // Entrance
+                          RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(44)), // Exit
                         ],
                       ),
                     ],
