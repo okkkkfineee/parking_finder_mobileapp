@@ -28,7 +28,7 @@ class RoadWidget extends StatelessWidget {
                   : direction == "up"
                       ? Icons.arrow_upward
                       : Icons.arrow_downward,
-          size: 30,
+          size: 10,
           color: highlightPath ? Colors.white : Colors.black, // Change arrow color for better contrast
         ),
       ),

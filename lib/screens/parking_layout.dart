@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parking_finder_app/widget/parking_spaces.dart';
 import 'package:parking_finder_app/widget/road.dart';
 import 'package:parking_finder_app/widget/space_fill.dart';
-import 'package:parking_finder_app/utilities/graph.dart';
+import 'package:parking_finder_app/utilities/node.dart';
 import 'package:parking_finder_app/utilities/pathfinding.dart';
 
 class ParkingLayout extends StatefulWidget {
@@ -11,72 +11,67 @@ class ParkingLayout extends StatefulWidget {
 }
 
 class _ParkingLayoutState extends State<ParkingLayout> {
-  late Graph parkingGraph;
+  late Node parkingGraph;
   List<int> path = [];
 
   @override
   void initState() {
     super.initState();
-    parkingGraph = Graph();
+    parkingGraph = Node();
     _initializeGraph();
   }
 
   void _initializeGraph() {
-    for (int i = 1; i <= 44; i++) {
+    for (int i = 1; i <= 72; i++) {  //Total 72 parking space and road
       parkingGraph.addNode(i);
     }
 
-    parkingGraph.addEdge(19, 27);
-    parkingGraph.addEdge(20, 1);
-    parkingGraph.addEdge(20, 7);
-    parkingGraph.addEdge(20, 19);
-    parkingGraph.addEdge(21, 2);
-    parkingGraph.addEdge(21, 8);
-    parkingGraph.addEdge(21, 20);
-    parkingGraph.addEdge(22, 3);
-    parkingGraph.addEdge(22, 21);
-    parkingGraph.addEdge(23, 4);
-    parkingGraph.addEdge(23, 22);
-    parkingGraph.addEdge(23, 29);
-    parkingGraph.addEdge(24, 5);
-    parkingGraph.addEdge(24, 9);
-    parkingGraph.addEdge(24, 23);
-    parkingGraph.addEdge(25, 6);
-    parkingGraph.addEdge(25, 10);
-    parkingGraph.addEdge(25, 24);
-    parkingGraph.addEdge(26, 25);
-    parkingGraph.addEdge(27, 31);
-    parkingGraph.addEdge(28, 22);
-    parkingGraph.addEdge(29, 33);
-    parkingGraph.addEdge(30, 26);
-    parkingGraph.addEdge(30, 15);
-    parkingGraph.addEdge(30, 16);
-    parkingGraph.addEdge(31, 35);
-    parkingGraph.addEdge(32, 28);
-    parkingGraph.addEdge(33, 39);
-    parkingGraph.addEdge(34, 30);
-    parkingGraph.addEdge(34, 17);
-    parkingGraph.addEdge(34, 18);
-    parkingGraph.addEdge(35, 36);
-    parkingGraph.addEdge(36, 11);
-    parkingGraph.addEdge(36, 37);
-    parkingGraph.addEdge(37, 12);
-    parkingGraph.addEdge(37, 38);
-    parkingGraph.addEdge(38, 32);
-    parkingGraph.addEdge(38, 39);
-    parkingGraph.addEdge(39, 40);
-    parkingGraph.addEdge(39, 44);
-    parkingGraph.addEdge(40, 13);
-    parkingGraph.addEdge(40, 41);
-    parkingGraph.addEdge(41, 14);
-    parkingGraph.addEdge(41, 42);
-    parkingGraph.addEdge(42, 34);
-    parkingGraph.addEdge(43, 38);
+    parkingGraph.addEdges(31, [39]);
+    parkingGraph.addEdges(32, [1, 7, 31]);
+    parkingGraph.addEdges(33, [2, 8, 32]);
+    parkingGraph.addEdges(34, [3, 9, 33]);
+    parkingGraph.addEdges(35, [4, 10, 34]);
+    parkingGraph.addEdges(36, [5, 11, 35]);
+    parkingGraph.addEdges(37, [6, 12, 36]);
+    parkingGraph.addEdges(38, [37]);
+    parkingGraph.addEdges(39, [41]);
+    parkingGraph.addEdges(40, [38]);
+    parkingGraph.addEdges(41, [44]);
+    parkingGraph.addEdges(42, [40]);
+    parkingGraph.addEdges(43, [53]);
+    parkingGraph.addEdges(44, [19, 43]);
+    parkingGraph.addEdges(45, [13, 20, 44]);
+    parkingGraph.addEdges(46, [14, 21, 45]);
+    parkingGraph.addEdges(47, [15, 46]);
+    parkingGraph.addEdges(48, [16, 55, 47]);
+    parkingGraph.addEdges(49, [17, 22, 48]);
+    parkingGraph.addEdges(50, [18, 23, 49]);
+    parkingGraph.addEdges(51, [24, 42, 50]);
+    parkingGraph.addEdges(52, [51]);
+    parkingGraph.addEdges(53, [57]);
+    parkingGraph.addEdges(54, [47]);
+    parkingGraph.addEdges(55, [59]);
+    parkingGraph.addEdges(56, [52]);
+    parkingGraph.addEdges(57, [61]);
+    parkingGraph.addEdges(58, [54]);
+    parkingGraph.addEdges(59, [66]);
+    parkingGraph.addEdges(60, [56]);
+    parkingGraph.addEdges(61, [62]);
+    parkingGraph.addEdges(62, [25, 63]);
+    parkingGraph.addEdges(63, [26, 64]);
+    parkingGraph.addEdges(64, [27, 65]);
+    parkingGraph.addEdges(65, [58, 66]);
+    parkingGraph.addEdges(66, [72, 67]);
+    parkingGraph.addEdges(67, [28, 68]);
+    parkingGraph.addEdges(68, [29, 69]);
+    parkingGraph.addEdges(69, [30, 70]);
+    parkingGraph.addEdges(70, [60]);
+    parkingGraph.addEdges(71, [65]);
   }
 
   void _findPath() {
     setState(() {
-      path = findShortestPath(parkingGraph, 32, 4);
+      path = findShortestPath(parkingGraph, 49, 5);  // From, To
       print("Shortest Path: $path");
     });
   }
@@ -115,84 +110,140 @@ class _ParkingLayoutState extends State<ParkingLayout> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SpaceFillWidget(numUnits: 1),
+                          SpaceFillWidget(numUnits: 2),
                           ParkingSpacesWidget(spaceCount: 6, startNumber: 1), // 1-6
                         ],
                       ),
 
-                      // Row 2: Left-moving Road (Nodes 7-12)
+                      // Row 2: Left-moving Road (Nodes 31-38)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          for (int i = 19; i < 27; i++)
+                          SpaceFillWidget(numUnits: 1),
+                          for (int i = 31; i < 39; i++)
                             RoadWidget(numUnits: 1, direction: "left", highlightPath: path.contains(i)),
                         ],
                       ),
 
-                      // Row 3: Middle Parking with Vertical Roads Connected
+                      // Row 3: Center row of Parking with Vertical Roads Connected
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+                          SpaceFillWidget(numUnits: 1),
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(27)),
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(31)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(39)),
                             ],
                           ),
                           Column(
                             children: [
-                              ParkingSpacesWidget(spaceCount: 2, startNumber: 7), // 7-8
-                              ParkingSpacesWidget(spaceCount: 2, startNumber: 11), // 11-12
+                              ParkingSpacesWidget(spaceCount: 6, startNumber: 7), // 7-12
                             ],
                           ),
                           Column(
                             children: [
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(28)),
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(32)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(29)),
-                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(33)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              ParkingSpacesWidget(spaceCount: 2, startNumber: 9), // 9-10
-                              ParkingSpacesWidget(spaceCount: 2, startNumber: 13), // 13-14
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(30)),
-                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(34)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              ParkingSpacesWidget(spaceCount: 4, startNumber: 15, isVertical: false), // 15-18
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(40)),
                             ],
                           ),
                         ],
                       ),
 
-                      // Row 5: Right-moving Road (Nodes 25-30)
+                      // Row 4: Center row of Parking with Vertical Roads Connected
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          for (int i = 35; i < 43; i++)
+                          SpaceFillWidget(numUnits: 1),
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(41)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              ParkingSpacesWidget(spaceCount: 6, startNumber: 13), // 13-18
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(42)),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // Row 5: Left-moving Road (Nodes 43-52)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          for (int i = 43; i < 53; i++)
+                            RoadWidget(numUnits: 1, direction: "left", highlightPath: path.contains(i)),
+                        ],
+                      ),
+
+                      // Row 6: Middle Parking with Vertical Roads Connected
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(53)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(57)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              ParkingSpacesWidget(spaceCount: 3, startNumber: 19), // 19-21
+                              ParkingSpacesWidget(spaceCount: 3, startNumber: 25), // 25-27
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(54)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(58)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(55)),
+                              RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(59)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              ParkingSpacesWidget(spaceCount: 3, startNumber: 22), // 22-24
+                              ParkingSpacesWidget(spaceCount: 3, startNumber: 28), // 28-30
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(56)),
+                              RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(60)),
+                            ],
+                          ),
+                          // Column(
+                          //   children: [
+                          //     ParkingSpacesWidget(spaceCount: 4, startNumber: 15, isVertical: false), // 15-18
+                          //   ],
+                          // ),
+                        ],
+                      ),
+
+                      // Row 7: Right-moving Road (Nodes 61-70)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          for (int i = 61; i < 71; i++)
                             RoadWidget(numUnits: 1, direction: "right", highlightPath: path.contains(i)),
                         ],
                       ),
 
-                      // Row 6: Entrance and Exit
+                      // Row 8: Entrance and Exit
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SpaceFillWidget(numUnits: 3),
-                          RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(43)), // Entrance
-                          RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(44)), // Exit
+                          SpaceFillWidget(numUnits: 4),
+                          RoadWidget(numUnits: 1, direction: "up", isVerticalFill: true, highlightPath: path.contains(71)), // Entrance
+                          RoadWidget(numUnits: 1, direction: "down", isVerticalFill: true, highlightPath: path.contains(72)), // Exit
                         ],
                       ),
                     ],
