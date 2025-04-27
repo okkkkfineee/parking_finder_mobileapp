@@ -1,37 +1,21 @@
 import 'package:flutter/material.dart';
 
 class RoadWidget extends StatelessWidget {
-  final int numUnits;
-  final String direction;
-  final bool isVerticalFill;
-  final bool highlightPath; // New parameter for path highlighting
+  final bool hasCar;
 
-  RoadWidget({
-    required this.numUnits,
-    required this.direction,
-    this.isVerticalFill = false,
-    this.highlightPath = false, // Default: No highlight
-  });
+  const RoadWidget({Key? key, this.hasCar = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: direction == "left" || direction == "right" ? numUnits * 60 : 60,
-      height: isVerticalFill ? 90 : 50,
-      color: highlightPath ? Colors.green : Colors.grey[300], // Highlight roads in the path
-      child: Center(
-        child: Icon(
-          direction == "left"
-              ? Icons.arrow_back
-              : direction == "right"
-                  ? Icons.arrow_forward
-                  : direction == "up"
-                      ? Icons.arrow_upward
-                      : Icons.arrow_downward,
-          size: 10,
-          color: highlightPath ? Colors.white : Colors.black, // Change arrow color for better contrast
-        ),
+      decoration: BoxDecoration(
+        color: Colors.grey,
       ),
+      child: hasCar
+          ? Center(
+              child: Icon(Icons.directions_car, size: 16, color: Colors.white),
+            )
+          : null,
     );
   }
 }

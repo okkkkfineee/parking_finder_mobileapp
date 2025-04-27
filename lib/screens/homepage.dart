@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'parking_layout.dart';
+import 'parking_layout_N.dart';
+import 'dummy_layout.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -7,25 +8,63 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
+      appBar: AppBar(title: const Text('Parking Finder App')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Hello World!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Select a Parking Lot:',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ParkingLayout()),
+                  MaterialPageRoute(
+                    builder: (context) => ParkingLotNLayout(),
+                  ),
                 );
               },
-              child: const Text('Go To Parking Page'),
+              child: const Text('Parking Lot "N"'),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => dummyLayout(),
+                  ),
+                );
+              },
+              child: const Text('Dummy Parking Lot 1'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => dummyLayout(),
+                  ),
+                );
+              },
+              child: const Text('Dummy Parking Lot 2'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => dummyLayout(),
+                  ),
+                );
+              },
+              child: const Text('Dummy Parking Lot 3'),
+            )
           ],
         ),
       ),
