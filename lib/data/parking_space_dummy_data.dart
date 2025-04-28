@@ -16,7 +16,7 @@ final List<Map<String, dynamic>> dummyParkingData = [
     {"id": 15, "status": "occupied", "timestamp": "2025-04-25 20:30:45"},
     {"id": 16, "status": "occupied", "timestamp": "2025-04-26 00:50:45"},
     {"id": 17, "status": "occupied", "timestamp": "2025-04-26 01:10:45"},
-    {"id": 18, "status": "occupied", "timestamp": "2025-04-26 11:20:45"},
+    {"id": 18, "status": "available", "timestamp": "2025-04-26 11:20:45"},
     {"id": 19, "status": "occupied", "timestamp": "2025-04-26 06:16:45"},
     {"id": 20, "status": "occupied", "timestamp": "2025-04-25 18:16:45"},
     {"id": 21, "status": "occupied", "timestamp": "2025-04-26 06:55:45"},

@@ -65,7 +65,7 @@ Future<Map<String, dynamic>> findAdjustedParkingAlongPath({
   required List<Map<String, dynamic>> vehicles,
   required Map<String, int> coordinateToNode,
 }) async {
-  // Step 1: Get all available parking spaces
+  // Get all available parking spaces
   List<Map<String, dynamic>> availableParkings = parkingSpaces
       .where((parking) => parking['status'] == 'available')
       .toList();
@@ -74,12 +74,12 @@ Future<Map<String, dynamic>> findAdjustedParkingAlongPath({
     throw Exception('No available parking spaces.');
   }
 
-  // Step 2: Prepare vehicles that are "finding"
+  // Get vehicles with status "finding"
   List<Map<String, dynamic>> findingCars = vehicles
       .where((vehicle) => vehicle['status'] == 'finding')
       .toList();
 
-  // Step 3: For each parking, find the shortest path
+  // find the shortest path
   List<Map<String, dynamic>> parkingWithPathInfo = [];
 
   for (var parking in availableParkings) {
@@ -92,18 +92,17 @@ Future<Map<String, dynamic>> findAdjustedParkingAlongPath({
     });
   }
 
-  // Step 4: Sort parkings by distance
   parkingWithPathInfo.sort((a, b) => a['distance'].compareTo(b['distance']));
 
-  // Step 5: Now check how many finding cars are along the FIRST shortest path
+  // Check vehicle with status "finding" are along the FIRST shortest path
   var firstParking = parkingWithPathInfo.first;
   List<int> firstPath = firstParking['path'];
 
   int findingCarsOnFirstPath = 0;
 
   for (var car in findingCars) {
-    int row = car['coordinates']['x'] - 1;
-    int col = car['coordinates']['y'] - 1;
+    int row = car['coordinates']['x'];
+    int col = car['coordinates']['y'];
     String key = '${row}_${col}';
     int? carNode = coordinateToNode[key];
 
@@ -112,18 +111,13 @@ Future<Map<String, dynamic>> findAdjustedParkingAlongPath({
     }
   }
 
-  print('First parking path has $findingCarsOnFirstPath finding cars along the way.');
-
-  // Step 6: Adjust to another parking
-  int adjustedIndex = findingCarsOnFirstPath; // skip that many parkings
+  // Adjust to second nearest and so on
+  int adjustedIndex = findingCarsOnFirstPath;
   if (adjustedIndex >= parkingWithPathInfo.length) {
     adjustedIndex = parkingWithPathInfo.length - 1;
   }
 
   var assignedParking = parkingWithPathInfo[adjustedIndex];
-
-  print('Assigned Parking Node: ${assignedParking['id']}');
-  print('Shortest Path to Assigned Parking: ${assignedParking['path']}');
 
   return {
     'assignedParkingId': assignedParking['id'],

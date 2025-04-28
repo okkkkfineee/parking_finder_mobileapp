@@ -30,16 +30,17 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
   late Node parkingGraph;
   late Map<String, int> coordinateToNode;
   List<int> path = [];
+  List<int> pathNodes = [];
 
   @override
   void initState() {
     super.initState();
     parkingGraph = Node();
-    _initializeGraph();
-    _initializeCoordinateToNode();
+    initializeGraph();
+    initializeCoordinateToNode();
   }
 
-  void _initializeGraph() {
+  void initializeGraph() {
     for (int i = 1; i <= 72; i++) {  //Total 72 parking space and road
       parkingGraph.addNode(i);
     }
@@ -87,24 +88,28 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
     parkingGraph.addEdges(71, [65]);
   }
 
-  void _initializeCoordinateToNode() {
+  void initializeCoordinateToNode() {
     coordinateToNode = {};
-    int nodeCounter = 1;
+    int parkingId = 1;
+    int roadId = 31; // Road IDs start from 31
 
     for (int row = 0; row < parkingMap.length; row++) {
       for (int col = 0; col < parkingMap[row].length; col++) {
         String cellType = parkingMap[row][col];
+        String key = '${row}_${col}';
 
-        if (cellType == 'P' || cellType == 'R') {
-          String key = '${row}_${col}';
-          coordinateToNode[key] = nodeCounter;
-          nodeCounter++;
+        if (cellType == 'P') {
+          coordinateToNode[key] = parkingId;
+          parkingId++;
+        } else if (cellType == 'R') {
+          coordinateToNode[key] = roadId;
+          roadId++;
         }
       }
     }
   }
 
-  void _findPath() async {
+  void findPath() async {
     try {
       int userNode = 49; // user node
 
@@ -115,6 +120,10 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
         vehicles: dummyVehicleData,
         coordinateToNode: coordinateToNode,
       );
+
+      setState(() {
+        pathNodes = List<int>.from(result['path']);
+      });
 
       print('Assigned Parking Node: ${result['assignedParkingId']}');
       print('Shortest Path to Assigned Parking: ${result['path']}');
@@ -132,7 +141,7 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
         actions: [
           IconButton(
             icon: Icon(Icons.directions),
-            onPressed: _findPath,
+            onPressed: findPath,
           ),
         ],),
       body: Column(
@@ -172,6 +181,9 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
                 int row = index ~/ parkingMap[0].length;
                 int col = index % parkingMap[0].length;
                 String cellType = parkingMap[row][col];
+                String key = '${row}_${col}';
+                int? nodeId = coordinateToNode[key];
+                bool highlightPath = nodeId != null && pathNodes.contains(nodeId);
 
                 if (cellType == 'P') {
                   if (parkingSpaceIndex < dummyParkingData.length) {
@@ -183,7 +195,10 @@ class _ParkingLayoutState extends State<ParkingLotNLayout> {
                 } else if (cellType == 'R') {
                   bool hasCar = dummyVehicleData.any((car) =>
                       car['coordinates']['x'] == row && car['coordinates']['y'] == col);
-                  return RoadWidget(hasCar: hasCar);
+                  return RoadWidget(
+                    hasCar: hasCar,
+                    highlightPath: highlightPath
+                  );
                 } else {
                   return SpaceFillWidget();
                 }

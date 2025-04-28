@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 
 class RoadWidget extends StatelessWidget {
   final bool hasCar;
+  final bool highlightPath;
 
-  const RoadWidget({Key? key, this.hasCar = false}) : super(key: key);
+  const RoadWidget({
+    Key? key,
+    this.hasCar = false,
+    this.highlightPath = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: highlightPath
+            ? Colors.green // highlight color
+            : Colors.grey,  // default road color
       ),
       child: hasCar
           ? Center(
@@ -19,3 +26,4 @@ class RoadWidget extends StatelessWidget {
     );
   }
 }
+
